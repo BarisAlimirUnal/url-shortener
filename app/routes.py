@@ -150,3 +150,14 @@ def stats(short_code):
         return jsonify({'error': 'Short URL not found'}), 404
 
     return jsonify(url_record.to_dict()), 200
+
+@bp.route('/', methods=['GET'])
+def index():
+    return jsonify({
+        'message': 'URL Shortener API is running',
+        'endpoints': {
+            'shorten': 'POST /shorten',
+            'redirect': 'GET /<short_code>',
+            'stats': 'GET /stats/<short_code>'
+        }
+    }), 200
