@@ -1,5 +1,5 @@
 # app/routes.py
-from flask import Blueprint, request, jsonify, redirect
+from flask import Blueprint, request, jsonify, redirect, render_template
 from app import db
 from app.models import URL
 from app.cache import cache_get, cache_set
@@ -153,11 +153,4 @@ def stats(short_code):
 
 @bp.route('/', methods=['GET'])
 def index():
-    return jsonify({
-        'message': 'URL Shortener API is running',
-        'endpoints': {
-            'shorten': 'POST /shorten',
-            'redirect': 'GET /<short_code>',
-            'stats': 'GET /stats/<short_code>'
-        }
-    }), 200
+    return render_template('index.html')
