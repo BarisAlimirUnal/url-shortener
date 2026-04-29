@@ -1,5 +1,5 @@
 # app/models.py
-from datetime import datetime
+from datetime import datetime, timezone
 from app import db
 
 
@@ -18,7 +18,7 @@ class URL(db.Model):
 
     short_code = db.Column(db.String(10), primary_key=True)
     long_url = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     click_count = db.Column(db.Integer, default=0)
 
     def to_dict(self):

@@ -6,7 +6,7 @@ from app.cache import cache_get, cache_set
 from app.utils import generate_short_code
 from app.config import Config
 from app.logger import get_logger
-from datetime import datetime
+from datetime import datetime, timezone
 
 bp = Blueprint('main', __name__)
 logger = get_logger(__name__)
@@ -67,7 +67,7 @@ def shorten():
     new_url = URL(
         short_code=short_code,
         long_url=long_url,
-        created_at=datetime.utcnow(),
+        created_at=datetime.now(timezone.utc),
         click_count=0
     )
     db.session.add(new_url)

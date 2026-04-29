@@ -1,0 +1,54 @@
+# .github/workflows/deploy.yml
+name: Test and Deploy
+
+on:
+  push:
+    branches:
+      - main      # deploys to production
+      - develop   # runs tests only
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest tests/ -v
+        env:
+          DATABASE_URL: sqlite:///:memory:
+          REDIS_URL: redis://localhost:6379
+          BASE_URL: http://localhost:5000
+          ENVIRONMENT: test
+          SECRET_KEY: test-secret-key
+
+  deploy:
+    name: Deploy to Railway
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'   # Only deploy on main branch
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        run: railway up --service ${{ secrets.RAILWAY_SERVICE_ID }}
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

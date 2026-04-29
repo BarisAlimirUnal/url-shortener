@@ -2,9 +2,11 @@
 import pytest
 import os
 
+
 # Set test environment variables BEFORE importing the app
-os.environ['DATABASE_URL'] = 'sqlite:///:memory:'  # Use SQLite for tests, no DB needed
-os.environ['REDIS_URL'] = 'redis://localhost:6379'
+os.environ['DATABASE_URL'] = 'sqlite:///:memory:'
+os.environ['UPSTASH_REDIS_REST_URL'] = 'https://fake-url.upstash.io'
+os.environ['UPSTASH_REDIS_REST_TOKEN'] = 'fake-token'
 os.environ['BASE_URL'] = 'http://localhost:5000'
 os.environ['ENVIRONMENT'] = 'test'
 os.environ['SECRET_KEY'] = 'test-secret-key'
